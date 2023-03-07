@@ -22,6 +22,19 @@ public class SphereManipulator : MonoBehaviour {
 	
 	private bool haveReceivedTipPosition = false;
 	private int receivedCount = 0;
+
+	private bool canStart = false;
+
+	private float minX = 10f;
+	private float maxX = -10f;
+	private float minY = 10f;
+	private float maxY = -10f;
+	private float minZ = 10f;
+	private float maxZ = -10f;
+
+	private float posX;
+	private float posY;
+	private float posZ;
 	
 	// Use this for initialization
 	void Start () {
@@ -88,10 +101,43 @@ public class SphereManipulator : MonoBehaviour {
 //			Debug.Log("Error getting tip position");
 			return;
 		}
-		hapticTip.position = posTip;
-		
-		godObject.position = posGod;
-		godObject.rotation = new Quaternion(0,0,0,1);
+
+		float tempX = posTip.x;
+		float tempY = posTip.y;
+		float tempZ = posTip.z;
+
+		if (tempX > maxX) {
+        maxX = tempX;
+    }
+		if (tempY > maxY) {
+        maxY = tempY;
+    }
+		if (tempZ > maxZ) {
+        maxZ = tempZ;
+    }
+
+		if (tempX < minX) {
+        minX = tempX;
+    }
+		if (tempY < minY) {
+        minY = tempY;
+    }
+		if (tempZ < minZ) {
+        minZ = tempZ;
+    }
+
+		posX = ((tempX - minX) / (maxX - minX)) * 2 - 1;
+		posY = ((tempX - minX) / (maxX - minX)) * 2 - 1;
+		posZ = ((tempX - minX) / (maxX - minX)) * 2 - 1;
+
+		if(canStart){
+			Debug.Log("x: " + posX + " y: " + posY " z:" + posZ);
+		}
+
+
+		//hapticTip.position = posTip;
+		//godObject.position = posGod;
+		//godObject.rotation = new Quaternion(0,0,0,1);
 
 	//	FalconUnity.setForceField(falcon_num,force);
 				 
@@ -139,12 +185,11 @@ public class SphereManipulator : MonoBehaviour {
 		
 		switch(i){
 		case 0:
-			
 			break;
 		case 1: 
 			break;
 		case 2:
-			
+			canStart = true;
 			break;
 		case 3:
 			break;
