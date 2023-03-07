@@ -23,7 +23,7 @@ public class SphereManipulator : MonoBehaviour {
 	private bool haveReceivedTipPosition = false;
 	private int receivedCount = 0;
 
-	private bool canStart = false;
+	public bool canStart = false;
 
 	private float minX = 10f;
 	private float maxX = -10f;
@@ -35,6 +35,26 @@ public class SphereManipulator : MonoBehaviour {
 	private float posX;
 	private float posY;
 	private float posZ;
+
+	private const string HORIZONTAL = "Horizontal";
+	private const string VERTICAL = "Vertical";
+
+	private float horizontalInput;
+	private float verticalInput;
+	private float currentSteerAngle;
+	private float currentbreakForce;
+	private bool isBreaking = false;
+
+	[SerializeField] private Transform car;
+
+	[SerializeField] private float motorForce;
+	[SerializeField] private float breakForce;
+	[SerializeField] private float maxSteerAngle;
+
+	[SerializeField] private WheelCollider frontLeftWheelCollider;
+	[SerializeField] private WheelCollider frontRightWheelCollider;
+	[SerializeField] private WheelCollider rearLeftWheelCollider;
+	[SerializeField] private WheelCollider rearRightWheelCollider;
 	
 	// Use this for initialization
 	void Start () {
@@ -127,21 +147,55 @@ public class SphereManipulator : MonoBehaviour {
     }
 
 		posX = ((tempX - minX) / (maxX - minX)) * 2 - 1;
-		posY = ((tempX - minX) / (maxX - minX)) * 2 - 1;
-		posZ = ((tempX - minX) / (maxX - minX)) * 2 - 1;
-
-		if(canStart){
-			Debug.Log("x: " + posX + " y: " + posY " z:" + posZ);
-		}
+		posY = ((tempY - minY) / (maxY - minY)) * 2 - 1;
+		posZ = ((tempZ - minZ) / (maxZ - minZ)) * 2 - 1;
 
 
-		//hapticTip.position = posTip;
-		//godObject.position = posGod;
+		hapticTip.position = car.position;
+		godObject.position = car.position;
 		//godObject.rotation = new Quaternion(0,0,0,1);
 
 	//	FalconUnity.setForceField(falcon_num,force);
 				 
 	}
+
+	    private void FixedUpdate()
+    {
+					GetInput();
+        	HandleMotor();
+        	HandleSteering();
+    }
+
+
+    private void GetInput()
+    {
+        horizontalInput = posX;
+        verticalInput = posZ;
+
+    }
+
+    private void HandleMotor()
+    {
+        frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
+        frontRightWheelCollider.motorTorque = verticalInput * motorForce;
+        currentbreakForce = isBreaking ? breakForce : 0f;
+        ApplyBreaking();
+    }
+
+    private void ApplyBreaking()
+    {
+        frontRightWheelCollider.brakeTorque = currentbreakForce;
+        frontLeftWheelCollider.brakeTorque = currentbreakForce;
+        rearLeftWheelCollider.brakeTorque = currentbreakForce;
+        rearRightWheelCollider.brakeTorque = currentbreakForce;
+    }
+
+    private void HandleSteering()
+    {
+        currentSteerAngle = maxSteerAngle * horizontalInput;
+        frontLeftWheelCollider.steerAngle = currentSteerAngle;
+        frontRightWheelCollider.steerAngle = currentSteerAngle;
+    }
 	
 	
 	void LateUpdate() {
@@ -169,7 +223,13 @@ public class SphereManipulator : MonoBehaviour {
 	void buttonPressed(int i){
 		
 		switch(i){
-		case 0:			
+		case 0:
+		if(isBreaking){
+			isBreaking = false;
+		}			
+		else{
+			isBreaking = true;
+		}
 			break;
 		case 1: 
 			break;
@@ -189,7 +249,6 @@ public class SphereManipulator : MonoBehaviour {
 		case 1: 
 			break;
 		case 2:
-			canStart = true;
 			break;
 		case 3:
 			break;

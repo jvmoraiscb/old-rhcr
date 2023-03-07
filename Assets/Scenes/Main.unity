@@ -113,6 +113,16 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!146 &431556364 stripped
+WheelCollider:
+  m_PrefabParentObject: {fileID: 146563053974746286, guid: 6902af9d181db27468c312ef5e9449d3,
+    type: 2}
+  m_PrefabInternal: {fileID: 1160712187}
+--- !u!146 &783568390 stripped
+WheelCollider:
+  m_PrefabParentObject: {fileID: 146515256747308884, guid: 6902af9d181db27468c312ef5e9449d3,
+    type: 2}
+  m_PrefabInternal: {fileID: 1160712187}
 --- !u!4 &856561441 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400002, guid: 52925aea55b22e942bc50b7558584eda, type: 2}
@@ -223,14 +233,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1236190723669348, guid: 6902af9d181db27468c312ef5e9449d3, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 65970250758861260, guid: 6902af9d181db27468c312ef5e9449d3,
         type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114252876975327592, guid: 6902af9d181db27468c312ef5e9449d3, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 6902af9d181db27468c312ef5e9449d3, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1355480855
@@ -432,6 +443,11 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!146 &1569236271 stripped
+WheelCollider:
+  m_PrefabParentObject: {fileID: 146535472626928366, guid: 6902af9d181db27468c312ef5e9449d3,
+    type: 2}
+  m_PrefabInternal: {fileID: 1160712187}
 --- !u!1 &1810874445
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,6 +478,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!146 &1989002729 stripped
+WheelCollider:
+  m_PrefabParentObject: {fileID: 146755368440809468, guid: 6902af9d181db27468c312ef5e9449d3,
+    type: 2}
+  m_PrefabInternal: {fileID: 1160712187}
 --- !u!4 &1997171120 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4538790060713794, guid: 6902af9d181db27468c312ef5e9449d3,
@@ -532,11 +553,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 13500002, guid: 52925aea55b22e942bc50b7558584eda, type: 2}
       propertyPath: m_Radius
-      value: 16.72
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 13500000, guid: 52925aea55b22e942bc50b7558584eda, type: 2}
       propertyPath: m_Radius
-      value: 16.72
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 52925aea55b22e942bc50b7558584eda, type: 2}
       propertyPath: m_LocalPosition.y
@@ -547,6 +568,46 @@ Prefab:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114407161613310184, guid: 52925aea55b22e942bc50b7558584eda,
+        type: 2}
+      propertyPath: motorForce
+      value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 114407161613310184, guid: 52925aea55b22e942bc50b7558584eda,
+        type: 2}
+      propertyPath: breakForce
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 114407161613310184, guid: 52925aea55b22e942bc50b7558584eda,
+        type: 2}
+      propertyPath: maxSteerAngle
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114407161613310184, guid: 52925aea55b22e942bc50b7558584eda,
+        type: 2}
+      propertyPath: frontLeftWheelCollider
+      value: 
+      objectReference: {fileID: 431556364}
+    - target: {fileID: 114407161613310184, guid: 52925aea55b22e942bc50b7558584eda,
+        type: 2}
+      propertyPath: frontRightWheelCollider
+      value: 
+      objectReference: {fileID: 1989002729}
+    - target: {fileID: 114407161613310184, guid: 52925aea55b22e942bc50b7558584eda,
+        type: 2}
+      propertyPath: rearLeftWheelCollider
+      value: 
+      objectReference: {fileID: 1569236271}
+    - target: {fileID: 114407161613310184, guid: 52925aea55b22e942bc50b7558584eda,
+        type: 2}
+      propertyPath: rearRightWheelCollider
+      value: 
+      objectReference: {fileID: 783568390}
+    - target: {fileID: 114407161613310184, guid: 52925aea55b22e942bc50b7558584eda,
+        type: 2}
+      propertyPath: car
+      value: 
+      objectReference: {fileID: 1997171120}
     m_RemovedComponents:
     - {fileID: 3300002, guid: 52925aea55b22e942bc50b7558584eda, type: 2}
     - {fileID: 2300002, guid: 52925aea55b22e942bc50b7558584eda, type: 2}
