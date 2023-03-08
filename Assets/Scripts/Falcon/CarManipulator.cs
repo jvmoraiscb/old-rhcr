@@ -1,16 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class SphereManipulator : MonoBehaviour {
+public class CarManipulator : MonoBehaviour {
 
 	public int falcon_num = 0;
 	public bool[] button_states = new bool[4];
 	bool [] curr_buttons = new bool[4];
 	public Vector3 constantforce;
-
-	public Transform hapticTip;
-	public Transform godObject;
-	public float godObjectMass;
 
 	private float minDistToMaxForce = 0.0005f;
 	private float maxDistToMaxForce = 0.009f;
@@ -22,8 +18,6 @@ public class SphereManipulator : MonoBehaviour {
 	
 	private bool haveReceivedTipPosition = false;
 	private int receivedCount = 0;
-
-	public bool canStart = false;
 
 	private float minX = 10f;
 	private float maxX = -10f;
@@ -43,13 +37,23 @@ public class SphereManipulator : MonoBehaviour {
 	private float verticalInput;
 	private float currentSteerAngle;
 	private float currentbreakForce;
-	private bool isBreaking = false;
+	private bool isBreaking = true;
+
+	[SerializeField] private Transform carModel;
+	[SerializeField] private Transform unityColliders;
+
+	[SerializeField] private int rigidBodyId;
 
 	[SerializeField] private Transform car;
 
 	[SerializeField] private float motorForce;
 	[SerializeField] private float breakForce;
 	[SerializeField] private float maxSteerAngle;
+
+	[SerializeField] private Transform frontLeftWheelTransform;
+	[SerializeField] private Transform frontRightWheeTransform;
+	[SerializeField] private Transform rearLeftWheelTransform;
+	[SerializeField] private Transform rearRightWheelTransform;
 
 	[SerializeField] private WheelCollider frontLeftWheelCollider;
 	[SerializeField] private WheelCollider frontRightWheelCollider;
@@ -87,14 +91,9 @@ public class SphereManipulator : MonoBehaviour {
 				return;
 			}
 			
-			hapticTip.position = posTip2;
-			
-			godObject.position = posTip2;
-			
 			Debug.Log ("Initialized with tip position: ");
 			Debug.Log (posTip2);
-			FalconUnity.setSphereGodObject(falcon_num,godObject.localScale.x * godObject.GetComponent<SphereCollider>().radius, godObjectMass,godObject.position, minDistToMaxForce * hapticTipToWorldScale, maxDistToMaxForce * hapticTipToWorldScale);
-			
+			FalconUnity.setRigidBodyGodObject(falcon_num, rigidBodyId, minDistToMaxForce * hapticTipToWorldScale, maxDistToMaxForce * hapticTipToWorldScale);
 			haveReceivedTipPosition = true;
 		}
 		
@@ -102,7 +101,7 @@ public class SphereManipulator : MonoBehaviour {
 		tipPositionScale *= hapticTipToWorldScale;
 		
 		if (savedHapticTipToWorldScale != hapticTipToWorldScale) {
-			FalconUnity.setSphereGodObject(falcon_num,godObject.localScale.x * godObject.GetComponent<SphereCollider>().radius, godObjectMass,godObject.position, minDistToMaxForce * hapticTipToWorldScale, maxDistToMaxForce * hapticTipToWorldScale);
+			FalconUnity.setRigidBodyGodObject(falcon_num, rigidBodyId, minDistToMaxForce * hapticTipToWorldScale, maxDistToMaxForce * hapticTipToWorldScale);
 			savedHapticTipToWorldScale = hapticTipToWorldScale;
 			
 		}
@@ -150,12 +149,9 @@ public class SphereManipulator : MonoBehaviour {
 		posY = ((tempY - minY) / (maxY - minY)) * 2 - 1;
 		posZ = ((tempZ - minZ) / (maxZ - minZ)) * 2 - 1;
 
-
-		hapticTip.position = car.position;
-		godObject.position = car.position;
-		//godObject.rotation = new Quaternion(0,0,0,1);
-
-	//	FalconUnity.setForceField(falcon_num,force);
+		Debug.Log("x:" + posX + " y:" + posY + " z:" + posZ);
+		//	godObject.rotation = new Quaternion(0,0,0,1);
+		//	FalconUnity.setForceField(falcon_num,force);
 				 
 	}
 
@@ -164,6 +160,9 @@ public class SphereManipulator : MonoBehaviour {
 					GetInput();
         	HandleMotor();
         	HandleSteering();
+					UpdateWheels();
+					carModel.position = unityColliders.position;
+					carModel.rotation = unityColliders.rotation;
     }
 
 
@@ -195,6 +194,23 @@ public class SphereManipulator : MonoBehaviour {
         currentSteerAngle = maxSteerAngle * horizontalInput;
         frontLeftWheelCollider.steerAngle = currentSteerAngle;
         frontRightWheelCollider.steerAngle = currentSteerAngle;
+    }
+
+		private void UpdateWheels()
+    {
+        UpdateSingleWheel(frontLeftWheelCollider, frontLeftWheelTransform);
+        UpdateSingleWheel(frontRightWheelCollider, frontRightWheeTransform);
+        UpdateSingleWheel(rearRightWheelCollider, rearRightWheelTransform);
+        UpdateSingleWheel(rearLeftWheelCollider, rearLeftWheelTransform);
+    }
+
+    private void UpdateSingleWheel(WheelCollider wheelCollider, Transform wheelTransform)
+    {
+        Vector3 pos;
+        Quaternion rot; 
+        wheelCollider.GetWorldPose(out pos, out rot);
+        wheelTransform.rotation = rot;
+        wheelTransform.position = pos;
     }
 	
 	

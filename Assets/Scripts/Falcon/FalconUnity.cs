@@ -19,7 +19,7 @@ public class FalconUnityCall {
 	
 	private static string serverAddress;
 	private static int serverPort;
-    private static AddressFamily serverProtocol;
+  private static AddressFamily serverProtocol;
 	private static Socket serverSocket;
 	
 	private static float lastFPS;
